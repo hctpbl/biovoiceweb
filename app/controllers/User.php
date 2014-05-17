@@ -49,7 +49,7 @@ class User extends BaseController {
 		if ($username == null) {
 			Return View::make('user/voiceaccess');
 		}
-		return View::make('testrecord')->withUsername($username);
+		return View::make('user/speakerverification')->withUsername($username);
 	}
 	
 }

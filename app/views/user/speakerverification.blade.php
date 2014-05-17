@@ -57,7 +57,7 @@
 @section('content_center')
 	
 	<div class="page-header">
-		<h2>{{ Lang::get('user.new') }}</h2>
+		<h2>{{ Lang::get('speakerverification.title', array('username'=>$username)) }}</h2>
 	</div>
 	
 	<button id="rec" type="button" class="btn btn-default">Record</button>
