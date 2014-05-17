@@ -7,6 +7,7 @@ use \Input;
 use \Redirect;
 use \Validator;
 use \View;
+use \Lang;
 
 use \bvw\Model\User as ModelUser;
 
@@ -42,14 +43,32 @@ class User extends BaseController {
 	}
 	
 	public function getVoiceaccess($username = null) {
+		$rules = array (
+			'username' => 'required|max:6|min:2|exists:user,username'
+		);
+		$messages = array (
+			'username.exists' => Lang::get('user.verifyexistinguser')
+		);
+		
 		if (Input::has('username')) {
 			$username = Input::get('username');
-			return Redirect::to('/user/voiceaccess/'.$username);
+		
+			$validator = Validator::make(array('username'=>$username), $rules, $messages);
+		
+			if ($validator->passes()) {
+				return Redirect::to('user/voiceaccess/'.$username);
+			}
+			
+			return Redirect::to('user/voiceaccess')->withErrors($validator)->withInput();
 		}
 		if ($username == null) {
 			Return View::make('user/voiceaccess');
 		}
-		return View::make('user/speakerverification')->withUsername($username);
+		$validator = Validator::make(array('username'=>$username), $rules);
+		if ($validator->passes()) {
+			return View::make('user/speakerverification')->withUsername($username);
+		}
+		return "error usuario";
 	}
 	
 }

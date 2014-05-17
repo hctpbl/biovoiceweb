@@ -17,5 +17,6 @@ return array(
 		'id-help' => 'Max. 6 characters',
 		'email' => 'E-mail',
 		'register' => 'Register',
+		'verifyexistinguser' => ':attribute must be already registered in our database'
 		
 );
