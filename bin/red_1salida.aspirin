@@ -1,0 +1,18 @@
+DefineBlackBox red_1salida
+{
+	OutputLayer-> salida
+	InputSize-> 36
+	Components->
+
+	{
+		PdpNode oculto 32
+		{
+			InputsFrom-> $INPUTS
+		}
+
+		PdpNode salida 1
+		{
+			InputsFrom-> oculto
+		}
+	}
+}

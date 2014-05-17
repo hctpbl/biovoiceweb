@@ -1,0 +1,18 @@
+DefineBlackBox red_auto
+{
+	OutputLayer-> salida
+	InputSize-> 36
+	Components->
+
+	{
+		PdpNode3 oculto 12
+		{
+			InputsFrom-> $INPUTS
+		}
+
+		PdpNode3 salida 36
+		{
+			InputsFrom-> oculto
+		}
+	}
+}

@@ -1,0 +1,31 @@
+body {
+  padding-top: 50px;
+}
+
+#web-header {
+	background: url(../img/bg_image_1.jpg) no-repeat;
+	height: 125px;
+}
+
+#web-header h1 {
+	color:white;
+	padding-top: 30px;
+	padding-left: 150px;
+}
+
+.date {
+	height: 100px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.date p {
+	line-height: 100px;
+}
+
+#footer {
+	height: 60px;
+	background-color: #f5f5f5;
+	margin-top: 30 px;
+	padding-top: 10px;
+}
