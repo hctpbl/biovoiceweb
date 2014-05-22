@@ -15,27 +15,20 @@
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-var audioContext = new AudioContext();
-var audioInput = null,
-    realAudioInput = null,
-    inputPoint = null;
+var audioContextDisp = new AudioContext();
+var audioInputDisp = null,
+    realAudioInputDisp = null,
+    inputPointDisp = null;
 var rafID = null;
-var analyserContext = null;
+var analyserContextDisp = null;
 var canvasWidth, canvasHeight;
-var recIndex = 0;
-
-/* TODO:
-
-- offer mono option
-- "Monitor input" switch
-*/
 
 function updateAnalysers(time) {
-    if (!analyserContext) {
+    if (!analyserContextDisp) {
         var canvas = document.getElementById("analyser");
         canvasWidth = canvas.width;
         canvasHeight = canvas.height;
-        analyserContext = canvas.getContext('2d');
+        analyserContextDisp = canvas.getContext('2d');
     }
 
     // analyzer draw code here
@@ -47,9 +40,9 @@ function updateAnalysers(time) {
 
         analyserNode.getByteFrequencyData(freqByteData); 
 
-        analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);
-        analyserContext.fillStyle = '#F6D565';
-        analyserContext.lineCap = 'round';
+        analyserContextDisp.clearRect(0, 0, canvasWidth, canvasHeight);
+        analyserContextDisp.fillStyle = '#F6D565';
+        analyserContextDisp.lineCap = 'round';
         var multiplier = analyserNode.frequencyBinCount / numBars;
 
         // Draw rectangle for each frequency bin.
@@ -60,9 +53,9 @@ function updateAnalysers(time) {
             for (var j = 0; j< multiplier; j++)
                 magnitude += freqByteData[offset + j];
             magnitude = magnitude / multiplier;
-            var magnitude2 = freqByteData[i * multiplier];
-            analyserContext.fillStyle = "hsl( " + Math.round((i*360)/numBars) + ", 100%, 50%)";
-            analyserContext.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
+            //var magnitude2 = freqByteData[i * multiplier];
+            analyserContextDisp.fillStyle = "hsl( " + Math.round((i*360)/numBars) + ", 100%, 50%)";
+            analyserContextDisp.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
         }
     }
     
@@ -70,20 +63,20 @@ function updateAnalysers(time) {
 }
 
 function gotStream(stream) {
-    inputPoint = audioContext.createGain();
+    inputPointDisp = audioContextDisp.createGain();
 
     // Create an AudioNode from the stream.
-    realAudioInput = audioContext.createMediaStreamSource(stream);
-    audioInput = realAudioInput;
-    audioInput.connect(inputPoint);
+    realAudioInputDisp = audioContextDisp.createMediaStreamSource(stream);
+    audioInputDisp = realAudioInputDisp;
+    audioInputDisp.connect(inputPointDisp);
 
-    analyserNode = audioContext.createAnalyser();
-    analyserNode.fftSize = 2048;
-    inputPoint.connect( analyserNode );
+    analyserNode = audioContextDisp.createAnalyser();
+    //analyserNode.fftSize = 2048;
+    inputPointDisp.connect( analyserNode );
 
-    zeroGain = audioContext.createGain();
+    zeroGain = audioContextDisp.createGain();
     zeroGain.gain.value = 0.0;
-    inputPoint.connect( zeroGain );
-    zeroGain.connect( audioContext.destination );
+    inputPointDisp.connect( zeroGain );
+    zeroGain.connect( audioContextDisp.destination );
     updateAnalysers();
 }

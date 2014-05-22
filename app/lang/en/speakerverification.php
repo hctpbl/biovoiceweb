@@ -10,6 +10,7 @@ return array(
 		|
 		*/
 
-		'title' => 'Speaker verification for :username'
+		'title' => 'Speaker verification for :username',
+		'allowaudio' => 'To be able to record audio, you must first allow this page access to the microphone in your browser.'
 
 );

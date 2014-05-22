@@ -1,8 +1,11 @@
 /bootstrap/compiled.php
 /vendor
+/bin
+/public/uploads
 composer.phar
 composer.lock
 .env.local.php
+.env.debian.php
 .env.php
 .DS_Store
 Thumbs.db
