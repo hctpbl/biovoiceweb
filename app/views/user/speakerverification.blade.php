@@ -35,7 +35,7 @@
 			
 			recordRTC = RecordRTC(MediaStream);
 			//gotStream(MediaStream);
-			loadStream(MediaStream);
+			//loadStream(MediaStream);
 		}, function(err){
 			//("#rec").popover('show');
 			//alert('Incompatible');
@@ -76,7 +76,7 @@
 		      formData.append(fileType + '-filename', fileName);
 		      formData.append(fileType + '-blob', blob);*/
 
-		      xhr('{{ URL::to('api/upload-audio') }}', /*formData*/blob, function (fName) {
+		      xhr('http://api.bvw.dev/v1/voiceaccess/enroll/{{ $username }}', /*formData*/blob, function (fName) {
 		          window.open(location.href + fName);
 		      });
 
@@ -98,7 +98,6 @@
 	});
 
 	</script>
-	{{ HTML::script('js/analyzeaudio.js') }}
 @stop
 
 @section('content_center')
