@@ -76,6 +76,21 @@
 		      formData.append(fileType + '-filename', fileName);
 		      formData.append(fileType + '-blob', blob);*/
 
+		      /*$.ajax({
+			      url: 'http://api.bvw.dev/v1/voiceaccess/enroll/{{ $username }}',
+			      type: 'POST',
+			      data: blob,
+			      success: function () {
+		              if (request.readyState == 4 && request.status == 200) {
+		                  alert(request.responseText);
+		          	  }
+			      },
+			      xhrFields: {
+				      withCredentials: true
+			      },
+		          processData: false
+			  });*/
+
 		      xhr('http://api.bvw.dev/v1/voiceaccess/enroll/{{ $username }}', /*formData*/blob, function (fName) {
 		          window.open(location.href + fName);
 		      });
