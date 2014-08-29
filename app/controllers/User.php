@@ -8,10 +8,23 @@ use \Redirect;
 use \Validator;
 use \View;
 use \Lang;
+use \Log;
+use \Config;
+use GuzzleHttp\Client;
 
 use \bvw\Model\User as ModelUser;
 
 class User extends BaseController {
+	
+	private function getAPIUrl() {
+		return Config::get('bvapi.url');
+	}
+	
+	private function getUsernameRules() {
+		return array (
+			'username' => 'required|max:6|min:2|exists:user,username'
+		);
+	}
 	
 	public function getCreate() {
 		Return View::make('user/new');
@@ -43,9 +56,7 @@ class User extends BaseController {
 	}
 	
 	public function getVoiceaccess($username = null) {
-		$rules = array (
-			'username' => 'required|max:6|min:2|exists:user,username'
-		);
+		$rules = $this->getUsernameRules();
 		$messages = array (
 			'username.exists' => Lang::get('user.verifyexistinguser')
 		);
@@ -66,15 +77,20 @@ class User extends BaseController {
 		}
 		$validator = Validator::make(array('username'=>$username), $rules);
 		if ($validator->passes()) {
-			return View::make('user/speakerverification')->withUsername($username);
+			$client = new Client();
+			$response = $client->get($this->getAPIUrl()."/v1/voiceaccess/status/".$username);
+			$userStatus = $response->json();
+			return View::make('user/speakerverification')
+						->withUsername($username)
+						->with('apiurl',$this->getAPIUrl())
+						->with('registered',$userStatus["registered"])
+						->with('enrolled',$userStatus["enrolled"]);
 		}
 		return "error usuario";
 	}
 	
-	public function getTestvoiceaccess($username = null) {
-		$rules = array (
-			'username' => 'required|max:6|min:2|exists:user,username'
-		);
+	/*public function getTestvoiceaccess($username = null) {
+		$rules = $this->getUsernameRules();
 		$messages = array (
 			'username.exists' => Lang::get('user.verifyexistinguser')
 		);
@@ -95,9 +111,9 @@ class User extends BaseController {
 		}
 		$validator = Validator::make(array('username'=>$username), $rules);
 		if ($validator->passes()) {
-			return View::make('user/testspeaker')->withUsername($username);
+			return View::make('user/testspeaker')->withUsername($username)->with('apiurl',$this->getAPIUrl());
 		}
 		return "error usuario";
-	}
+	}*/
 	
 }

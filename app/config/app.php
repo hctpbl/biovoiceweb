@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'url' => 'http://localhost/bvw',
+	'url' => 'http://biovoiceweb.duckdns.org',
 
 	/*
 	|--------------------------------------------------------------------------

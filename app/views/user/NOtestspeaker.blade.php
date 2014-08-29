@@ -50,14 +50,14 @@ $(document).ready(function(){
 				if (!recording) {
 					recordRTC.startRecording();
 					recording = true;
-					$(this).html('Stop');
+					$(this).html('Start');
 				} else {
 					recordRTC.stopRecording(function(audioURL) {
 						blob = recordRTC.getBlob();
 						//$('#player').attr('src',audioURL);
 					});
 					recording = false;
-					$(this).html('Record');
+					$(this).html('Stop');
 				}
 			} else {
 				$("#rec").popover('show');
@@ -91,7 +91,7 @@ $(document).ready(function(){
 						processData: false
 						});*/
 
-				xhr('http://api.bvw.dev/v1/voiceaccess/test/{{ $username }}', /*formData*/blob, function (fName) {
+				xhr('{{ $apiurl }}/v1/voiceaccess/test/{{ $username }}', /*formData*/blob, function (fName) {
 					window.open(location.href + fName);
 				});
 
@@ -120,11 +120,16 @@ $(document).ready(function(){
 	<div class="page-header">
 	<h2>{{ Lang::get('speakerverification.title', array('username'=>$username)) }}</h2>
 	</div>
+	@if (!$enrolled)
+		<p>@lang('speakerverification.not_enrolled_text')</p>
+	@else
+		<p>@lang('speakerverification.not_enrolled_text')</p>
+	@endif
 
 	<canvas id="analyser" width="1024" height="500"></canvas>
 
-	<button id="rec" type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-content="{{ Lang::get('speakerverification.allowaudio') }}">Record</button>
-	<button id="stop" type="button" class="btn btn-default">Stop</button>
+	<button id="rec" type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-content="{{ Lang::get('speakerverification.allowaudio') }}">@lang('speakerverification.start_recording_button')</button>
+	<button id="stop" type="button" class="btn btn-default">@lang('speakerverification.enroll_button')</button>
 
 	<!-- <audio id="player" autoplay controls></audio>  -->
 
