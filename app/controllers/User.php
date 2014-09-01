@@ -89,31 +89,4 @@ class User extends BaseController {
 		return "error usuario";
 	}
 	
-	/*public function getTestvoiceaccess($username = null) {
-		$rules = $this->getUsernameRules();
-		$messages = array (
-			'username.exists' => Lang::get('user.verifyexistinguser')
-		);
-		
-		if (Input::has('username')) {
-			$username = Input::get('username');
-		
-			$validator = Validator::make(array('username'=>$username), $rules, $messages);
-		
-			if ($validator->passes()) {
-				return Redirect::to('user/voiceaccess/'.$username);
-			}
-			
-			return Redirect::to('user/voiceaccess')->withErrors($validator)->withInput();
-		}
-		if ($username == null) {
-			Return View::make('user/voiceaccess');
-		}
-		$validator = Validator::make(array('username'=>$username), $rules);
-		if ($validator->passes()) {
-			return View::make('user/testspeaker')->withUsername($username)->with('apiurl',$this->getAPIUrl());
-		}
-		return "error usuario";
-	}*/
-	
 }

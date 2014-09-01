@@ -36,7 +36,8 @@ function RecordRTC(mediaStream, config) {
 
         // Media Stream Recording API has not been implemented in chrome yet;
         // That's why using WebAudio API to record stereo audio in WAV format
-        var Recorder = IsChrome ? window.StereoRecorder : window.MediaStreamRecorder;
+        //var Recorder = IsChrome ? window.StereoRecorder : window.MediaStreamRecorder;
+        var Recorder = window.StereoRecorder;
 
         // video recorder (in WebM format)
         if (config.type == 'video') Recorder = window.WhammyRecorder;
@@ -62,12 +63,17 @@ function RecordRTC(mediaStream, config) {
 
         console.warn('stopped recording ' + (IsChrome ? config.type : 'audio+video') + ' stream.');
 
-        if ((config.type == 'audio' && !IsChrome) || (config.type == 'video' && IsChrome)) {
+        /*if ((config.type == 'audio' && !IsChrome) || (config.type == 'video' && IsChrome)) {
             mediaRecorder.stop(_callback);
+            console.log("1");
         } else {
             mediaRecorder.stop();
+            console.log("2");
             _callback();
-        }
+        }*/
+        mediaRecorder.stop();
+        console.log("2");
+        _callback();
 
         function _callback() {
             if (callback && mediaRecorder) {
@@ -383,11 +389,11 @@ MRecordRTC.writeToDisk = RecordRTC.writeToDisk;
 // Cross-Browser-Declarations.js
 
 // animation-frame used in WebM recording
-requestAnimationFrame = window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
-cancelAnimationFrame = window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame;
+requestAnimationFrame = window.webkitRequestAnimationFrame || window.RequestAnimationFrame;
+cancelAnimationFrame = window.webkitCancelAnimationFrame || window.CancelAnimationFrame;
 
 // WebAudio API representer
-AudioContext = window.webkitAudioContext || window.mozAudioContext;
+AudioContext = window.webkitAudioContext || window.AudioContext;
 
 URL = window.URL || window.webkitURL;
 navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -600,6 +606,7 @@ function StereoAudioRecorder(mediaStream, root) {
 
         // recorded audio length
         this.length = recordingLength;
+
     };
 
     function interleave(leftChannel, rightChannel) {
@@ -702,6 +709,26 @@ function StereoAudioRecorder(mediaStream, root) {
     } else {
         throw 'WebAudio API has no support on this browser.';
     }
+    
+    /**Héctor*/
+    
+    var analyser = context.createAnalyser();
+    analyser.smoothingTimeConstant = 0.3;
+    analyser.fftsize = 1024;
+    
+    function getAverageVolume(array) {
+        var values = 0; 
+        // get all the frequency amplitudes
+        for (var i = 0; i < array.length; i++) {
+            values += array[i];
+        }
+        return values / (array.length);
+    }
+
+    function getCanvas() {
+    	return document.getElementById('analyser');
+    }
+    /* */
 
     __stereoAudioRecorderJavacriptNode.onaudioprocess = function(e) {
         if (!recording) return;
@@ -714,10 +741,51 @@ function StereoAudioRecorder(mediaStream, root) {
         rightchannel.push(new Float32Array(right));
 
         recordingLength += bufferSize;
+        
+        // *** Héctor: Modificaciones para mostrar audio
+        canvasUpdate();
+		// *** Fin modificaciones mostrar audio
     };
+    
+    function canvasUpdate() {
+        var array = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(array);
+        
+        var canvasWidth = getCanvas().width;
+        var canvasHeight = getCanvas().height;
+        var analyserContextDisp = getCanvas().getContext('2d');
 
+        analyserContextDisp.clearRect(0, 0, canvasWidth, canvasHeight);
+        analyserContextDisp.fillStyle = '#F6D565';
+        analyserContextDisp.lineCap = 'round';
+        
+        var SPACING = 3;
+        var BAR_WIDTH = 1;
+        var numBars = Math.round(canvasWidth / SPACING);
+
+        var multiplier = analyser.frequencyBinCount / numBars;
+
+        // Draw rectangle for each frequency bin.
+        for (var i = 0; i < numBars; ++i) {
+            var magnitude = 0;
+            var offset = Math.floor( i * multiplier );
+            // gotta sum/average the block, or we miss narrow-bandwidth spikes
+            for (var j = 0; j< multiplier; j++)
+                magnitude += array[offset + j];
+            magnitude = magnitude / multiplier;
+            //var magnitude2 = freqByteData[i * multiplier];
+            analyserContextDisp.fillStyle = "hsl( " + Math.round((i*360)/numBars) + ", 100%, 50%)";
+            analyserContextDisp.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
+        }
+    }
+	
     // we connect the recorder
     volume.connect(__stereoAudioRecorderJavacriptNode);
+
+    /* Conexiones Héctor */
+    audioInput.connect(analyser);
+	analyser.connect(__stereoAudioRecorderJavacriptNode);
+    /* Fin Conexiones Héctor */
 
     // to prevent self audio to be connected with speakers
     __stereoAudioRecorderJavacriptNode.connect(context.destination);

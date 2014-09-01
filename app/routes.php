@@ -14,23 +14,6 @@
 Route::controller('user', 'bvw\Controller\User');
 Route::controller('api', 'bvw\Controller\Api');
 
-Route::get('my/page', function() {
-	return 'Hello world';
-});
-
-/*Route::get('testuser', function() {
-	$usuario = new User;
-	$usuario->nombre = 'Héctor';
-	$usuario->apellidos = 'Pablos López';
-	$usuario->username = 'hctpbl';
-	$usuario->email = 'hctpbl@gmail.com';
-	$usuario->save();
-});*/
-
-/*Route::get('testrecord', function() {
-	return View::make('testrecord');
-});*/
-
 Route::get('/', function()
 {
 	//return View::make('hello');

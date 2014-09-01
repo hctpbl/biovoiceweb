@@ -1,6 +1,7 @@
 @extends('master')
 
 @section('content_center')
+
 	<p>{{ Lang::get('index.bvw-description') }}</p>
 	<p>{{ Lang::get('index.devices') }}</p>
 	<ul>
