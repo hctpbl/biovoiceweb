@@ -11,7 +11,7 @@
 		<h2>{{ Lang::get('voiceaccess.access-title') }}</h2>
 	</div>
 	<p>{{ Lang::get('voiceaccess.access-instructions') }}</p>
-	<p>{{ Lang::get('voiceaccess.access-warning') }}</p>
+	<!-- <p>{{ Lang::get('voiceaccess.access-warning') }}</p>  -->
 	
 	{{ Form::open(array('action' => 'bvw\Controller\User@getVoiceaccess', 'method' => 'GET')) }}
 	

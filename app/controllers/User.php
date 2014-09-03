@@ -49,7 +49,8 @@ class User extends BaseController {
 			$usuario->username = $data['username'];
 			$usuario->email = $data['email'];
 			$usuario->save();
-			return Redirect::to('/');
+			//return Redirect::to('/');
+			return View::make('user/registersuccess')->withUser($usuario);
 		}
 		
 		return Redirect::to('/user/create')->withErrors($validator)->withInput();
