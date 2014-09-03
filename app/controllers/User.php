@@ -43,14 +43,26 @@ class User extends BaseController {
 		$validator = Validator::make($data, $rules);
 		
 		if ($validator->passes()) {
-			$usuario = new ModelUser;
+			/*$usuario = new ModelUser;
 			$usuario->first_name = $data['first_name'];
 			$usuario->surname = $data['surname'];
 			$usuario->username = $data['username'];
-			$usuario->email = $data['email'];
-			$usuario->save();
+			$usuario->email = $data['email'];*/
+			//$usuario->save();
 			//return Redirect::to('/');
-			return View::make('user/registersuccess')->withUser($usuario);
+			$client = new Client();
+			$response = $jsonUser = $client->post($this->getAPIUrl()."/v1/users", [ 'body' =>
+				[
+					'username'=>$data['username'],
+					'first_name'=>$data['first_name'],
+					'surname'=>$data['surname'],
+					'email'=>$data['email'],
+				]
+			]);
+			//$client->get($this->getAPIUrl()."/v1/users/".$data['username']);
+			$jsonUser = json_decode(json_encode($response->json()['user']));
+			//return View::make('user/registersuccess')->withUser($usuario);
+			return View::make('user/registersuccess')->withUser($jsonUser);
 		}
 		
 		return Redirect::to('/user/create')->withErrors($validator)->withInput();
