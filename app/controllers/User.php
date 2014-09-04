@@ -16,25 +16,37 @@ use GuzzleHttp\Exception\ClientException;
 
 use \bvw\Model\User as ModelUser;
 
+/**
+ * User controller, whose function is to redirect petitios
+ * related to users
+ * 
+ * @author Héctor Pablos
+ *
+ */
 class User extends BaseController {
 	
+	/**
+	 * Checks config file to return the URL for the API
+	 * 
+	 * @return string
+	 */
 	private function getAPIUrl() {
 		return Config::get('bvapi.url');
 	}
 	
+	/**
+	 * Returns an array with the validation rules for the username
+	 * @return array:string
+	 */
 	private function getUsernameRules() {
 		return array (
 			'username' => 'required|max:6|min:2|exists:user,username'
 		);
 	}
 	
-	public function getCreate() {
-		if (Session::has('errores')) {
-			Return View::make('user/new')->withErrors(Session::get('errores'));
-		}
-		Return View::make('user/new');
-	}
-	
+	/**
+	 * Returns the view to create a user
+	 */
 	public function postCreate() {
 		$data = Input::all();
 		
@@ -70,7 +82,13 @@ class User extends BaseController {
 		return Redirect::to('/user/create')->withErrors($validator)->withInput();
 	}
 	
-	public function getVoiceaccess($username = null) {$rules = $this->getUsernameRules();
+	/**
+	 * Returns the viewto perform the voice acces for user $username
+	 * @param string $username
+	 * @return string
+	 */
+	public function getVoiceaccess($username = null) {
+		$rules = $this->getUsernameRules();
 		$messages = array (
 			'username.exists' => Lang::get('user.verifyexistinguser')
 		);
