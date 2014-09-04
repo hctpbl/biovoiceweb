@@ -36,20 +36,13 @@ class User extends BaseController {
 		$rules = array (
 			'first_name' => 'required|max:30',
 			'surname' => 'max:100',
-			'username' => 'required|unique:user,username|max:6|min:2',
-			'email' => 'required|email|unique:user,email|max:50',
+			'username' => 'required|max:6|min:2',
+			'email' => 'required|email|max:50',
 		);
 		
 		$validator = Validator::make($data, $rules);
 		
 		if ($validator->passes()) {
-			/*$usuario = new ModelUser;
-			$usuario->first_name = $data['first_name'];
-			$usuario->surname = $data['surname'];
-			$usuario->username = $data['username'];
-			$usuario->email = $data['email'];*/
-			//$usuario->save();
-			//return Redirect::to('/');
 			$client = new Client();
 			$response = $jsonUser = $client->post($this->getAPIUrl()."/v1/users", [ 'body' =>
 				[
@@ -59,9 +52,7 @@ class User extends BaseController {
 					'email'=>$data['email'],
 				]
 			]);
-			//$client->get($this->getAPIUrl()."/v1/users/".$data['username']);
 			$jsonUser = json_decode(json_encode($response->json()['user']));
-			//return View::make('user/registersuccess')->withUser($usuario);
 			return View::make('user/registersuccess')->withUser($jsonUser);
 		}
 		
