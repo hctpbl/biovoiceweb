@@ -10,7 +10,9 @@ use \View;
 use \Lang;
 use \Log;
 use \Config;
+use \Session;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 use \bvw\Model\User as ModelUser;
 
@@ -27,6 +29,9 @@ class User extends BaseController {
 	}
 	
 	public function getCreate() {
+		if (Session::has('errores')) {
+			Return View::make('user/new')->withErrors(Session::get('errores'));
+		}
 		Return View::make('user/new');
 	}
 	
@@ -44,23 +49,28 @@ class User extends BaseController {
 		
 		if ($validator->passes()) {
 			$client = new Client();
-			$response = $jsonUser = $client->post($this->getAPIUrl()."/v1/users", [ 'body' =>
-				[
-					'username'=>$data['username'],
-					'first_name'=>$data['first_name'],
-					'surname'=>$data['surname'],
-					'email'=>$data['email'],
-				]
-			]);
-			$jsonUser = json_decode(json_encode($response->json()['user']));
-			return View::make('user/registersuccess')->withUser($jsonUser);
+			try {
+				$response = $jsonUser = $client->post($this->getAPIUrl()."/v1/users", [ 'body' =>
+					[
+						'username'=>$data['username'],
+						'first_name'=>$data['first_name'],
+						'surname'=>$data['surname'],
+						'email'=>$data['email'],
+					]
+				]);
+				$jsonUser = json_decode(json_encode($response->json()['user']));
+				return View::make('user/registersuccess')->withUser($jsonUser);
+			} catch (ClientException $exception) {
+				$responseBody = $exception->getResponse();
+				$jsonUser = json_decode(json_encode($responseBody->json()));
+				return Redirect::to('/user/create')->withInput()->with('errores',$jsonUser->messages);
+			}
 		}
 		
 		return Redirect::to('/user/create')->withErrors($validator)->withInput();
 	}
 	
-	public function getVoiceaccess($username = null) {
-		$rules = $this->getUsernameRules();
+	public function getVoiceaccess($username = null) {$rules = $this->getUsernameRules();
 		$messages = array (
 			'username.exists' => Lang::get('user.verifyexistinguser')
 		);

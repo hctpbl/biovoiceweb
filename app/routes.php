@@ -12,7 +12,6 @@
 */
 
 Route::controller('user', 'bvw\Controller\User');
-Route::controller('api', 'bvw\Controller\Api');
 
 Route::get('/', function()
 {
