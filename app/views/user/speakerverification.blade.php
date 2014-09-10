@@ -78,8 +78,19 @@
 		    function xhr(url, data, callback) {
             	var data, typeOfString;
 		        var request = new XMLHttpRequest();
+		        request.upload.addEventListener("progress", function(evt) {
+			        if (evt.lengthComputable) {
+				        var percentComplete = (evt.loaded / evt.total) * 100;
+				        //$("#upload-progress").attr("value", percentComplete);
+				        $("#upload-progress").css("width", percentComplete+"%");
+				        $("#percentage-progress").html(parseInt(percentComplete, 10)+"%");
+			        }
+		        });
 		        request.onreadystatechange = function () {
 		            if (request.readyState == 4 && request.status == 200) {
+						$("#showProgress").hide();
+				        $("#upload-progress").css("width", "0%");
+				        $("#percentage-progress").html("0%");
 	                	data = JSON.parse(request.responseText);
 			            if (action === "enroll") {
 	                		if (!data.error) {
@@ -90,6 +101,8 @@
 	                		};
 			            } else {
 	                		if (!data.error) {
+		                		$('#ver-threshold-value').html(data.threshold + "");
+		                		$('#ver-result-value').html(data.result + "");
 		                		if (data.result >= data.threshold) {
 			                		typeOfString = 'success';
 			                		$('#ver-modal-subtitle').html("{{ Lang::get('speakerverification.verification_modal_subtitle_success') }}");
@@ -100,24 +113,6 @@
 			                		$('#ver-modal-subtitle').css("color","red");
 			                		$('#ver-modal-text').html("{{ Lang::get('speakerverification.verification_modal_text_failure') }}");
 		                		};
-		                		//drawChart(data.result, data.threshold);
-		                		/*google.load("visualization", "1", {packages:["corechart"]});
-        						google.setOnLoadCallback(drawChart);
-								function drawChart() {
-						          var data = google.visualization.arrayToDataTable([
-						            ['a', 'b', { role: 'style' }],
-						            ["{{ Lang::get('speakerverification.verification_threshold') }}", data.threshold, 'blue'],
-						            ["{{ Lang::get('speakerverification.verification_result') }}", data.result, 'red']
-						          ]);
-						
-						          var options = {
-						            title: "{{ Lang::get('verification_modal_title') }}"
-						          };
-						
-						          var chart = new google.visualization.BarChart(document.getElementById('ver-modal-chart'));
-						
-						          chart.draw(data, options);
-						        }*/
 			            		$('#verifyModal').modal('show');
 	                		};
 			            };
@@ -149,7 +144,6 @@
 						blob = recordRTC.getBlob();
 						console.log('Hey!');
 						console.log(blob);
-						//$('#player').attr('src',audioURL);
 					});
 				    $('#chrono').runner('stop');
 					$("#actionButtons").show();
@@ -165,10 +159,12 @@
 		});
 
 		$("#verify").click(function() {
+			$("#showProgress").show();
 			sendAudio('test');
 		});
 
 		$("#enroll").click(function() {
+			$("#showProgress").show();
 			sendAudio('enroll');
 		});
 
@@ -211,6 +207,10 @@
 	      <div class="modal-body">
 	        <h4 id="ver-modal-subtitle"></h4>
 	        <p id="ver-modal-text"></p>
+	        <ul>
+	        	<li>@lang('speakerverification.verification_threshold'): <span id="ver-threshold-value"></span></li>
+	        	<li>@lang('speakerverification.verification_result'): <span id="ver-result-value"></span></li>
+	        </ul>
 	        <div id="ver-modal-chart"></div>
 	      </div>
 	      <div class="modal-footer">
@@ -240,7 +240,15 @@
 			<button id="verify" type="button" class="btn btn-primary btn-lg">@lang('speakerverification.verify_button')</button>
 		@endif
 	</div>
-	
-	<!-- <audio id="player" autoplay controls></audio>  -->
+	<br />
+	<div id="showProgress" style="display: none">
+		<p>Uploading...</p>
+		<div class="progress">
+			<!-- <progress id="upload-progress" value="0" max="100"></progress>  -->
+			<div id="upload-progress" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+			  <span id="percentage-progress"></span>
+			</div>
+		</div>
+	</div>
 
 @stop
