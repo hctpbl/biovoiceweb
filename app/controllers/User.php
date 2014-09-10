@@ -43,6 +43,10 @@ class User extends BaseController {
 			'username' => 'required|max:6|min:2|exists:user,username'
 		);
 	}
+
+	public function getCreate() {
+		return View::make('user/new')->withErrors(Session::get('errors'));
+	}
 	
 	/**
 	 * Returns the view to create a user
@@ -75,7 +79,7 @@ class User extends BaseController {
 			} catch (ClientException $exception) {
 				$responseBody = $exception->getResponse();
 				$jsonUser = json_decode(json_encode($responseBody->json()));
-				return Redirect::to('/user/create')->withInput()->with('errores',$jsonUser->messages);
+				return Redirect::to('/user/create')->withInput()->with('errors',$jsonUser->messages);
 			}
 		}
 		

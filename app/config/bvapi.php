@@ -12,5 +12,5 @@ return array (
 		|
 		*/
 		
-		'url' => 'http://biovoiceapi.duckdns.org',
+		'url' => 'http://amz-biovoiceapi.duckdns.org',
 );
