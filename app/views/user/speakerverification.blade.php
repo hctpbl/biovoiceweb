@@ -90,6 +90,8 @@
 	                		};
 			            } else {
 	                		if (!data.error) {
+		                		$('#ver-threshold-value').html(data.threshold + "");
+		                		$('#ver-result-value').html(data.result + "");
 		                		if (data.result >= data.threshold) {
 			                		typeOfString = 'success';
 			                		$('#ver-modal-subtitle').html("{{ Lang::get('speakerverification.verification_modal_subtitle_success') }}");
@@ -211,6 +213,10 @@
 	      <div class="modal-body">
 	        <h4 id="ver-modal-subtitle"></h4>
 	        <p id="ver-modal-text"></p>
+	        <ul>
+	        	<li>@lang('speakerverification.verification_threshold'): <span id="ver-threshold-value"></span></li>
+	        	<li>@lang('speakerverification.verification_result'): <span id="ver-result-value"></span></li>
+	        </ul>
 	        <div id="ver-modal-chart"></div>
 	      </div>
 	      <div class="modal-footer">
