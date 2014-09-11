@@ -18,3 +18,8 @@ Route::get('/', function()
 	//return View::make('hello');
 	return View::make('index');
 });
+
+Route::get('/download/BioVoiceApp.apk', function()
+{
+	return Response::download(public_path().'/apk/BioVoiceAPP.apk');
+});

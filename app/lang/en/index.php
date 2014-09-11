@@ -74,7 +74,7 @@ return array(
 		
 		'downloadspanel-app1inst-title' => 'Installation:',
 		
-		'downloadspanel-app1inst-step1' => 'Download the installer: BioVoiceApp.apk',
+		'downloadspanel-app1inst-step1' => 'Download the installer: ',
 		
 		'downloadspanel-app1inst-step2' => 'Once in the mobile device, execute it.',
 		

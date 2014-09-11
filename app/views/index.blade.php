@@ -78,7 +78,7 @@
 			<ul>
 				<li>{{ Lang::get('index.downloadspanel-app1inst-title') }}</li>
 				<li><ol type="a">
-					<li>{{ Lang::get('index.downloadspanel-app1inst-step1') }}</li>
+					<li>{{ Lang::get('index.downloadspanel-app1inst-step1') }} <a href="{{URL::to('download/BioVoiceApp.apk')}}">BioVoiceApp.apk</a></li>
 					<li>{{ Lang::get('index.downloadspanel-app1inst-step2') }}</li>
 					<li>{{ Lang::get('index.downloadspanel-app1inst-step3') }}</li>
 				</ol></li>
