@@ -16,7 +16,7 @@
 	<ul>
 		<li>{{ Lang::get('index.content-home') }}</li>
 		<li>{{ Lang::get('index.content-voice-access') }}</li>
-		<li>{{ Lang::get('index.content-results') }}</li>
+		<!-- <li>{{ Lang::get('index.content-results') }}</li> -->
 	</ul>
 	
 	<div class="page-header">
@@ -70,18 +70,18 @@
 			<p>{{ Lang::get('index.downloadspanel-app1') }}</p>
 			<ul>
 				<li>{{ Lang::get('index.downloadspanel-app1reqs-title') }}</li>
-				<ul>
+				<li><ul>
 					<li>{{ Lang::get('index.downloadspanel-app1reqs-req1') }}</li>
 					<li>{{ Lang::get('index.downloadspanel-app1reqs-req2') }}</li>
-				</ul>
+				</ul></li>
 			</ul>
 			<ul>
 				<li>{{ Lang::get('index.downloadspanel-app1inst-title') }}</li>
-				<ol type="a">
+				<li><ol type="a">
 					<li>{{ Lang::get('index.downloadspanel-app1inst-step1') }}</li>
 					<li>{{ Lang::get('index.downloadspanel-app1inst-step2') }}</li>
 					<li>{{ Lang::get('index.downloadspanel-app1inst-step3') }}</li>
-				</ol>
+				</ol></li>
 			</ul>
 		</div>
 	</div>

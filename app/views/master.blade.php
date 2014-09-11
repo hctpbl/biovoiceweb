@@ -3,7 +3,6 @@
   <head>
 
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
 		@section('title')
@@ -42,7 +41,7 @@
           <ul class="nav navbar-nav">
             <li class="{{ Request::is('/') ? 'active' : '' }}"><a href="{{ URL::to('/') }}">{{ Lang::get('master.navbar-home') }}</a></li>
             <li class="{{ Request::is('user/voiceaccess*') ? 'active' : '' }}"><a href="{{ URL::to('user/voiceaccess') }}">{{ Lang::get('master.navbar-voiceaccess') }}</a></li>
-            <li><a href="#results">{{ Lang::get('master.navbar-results') }}</a></li>
+            <!-- <li><a href="#results">{{ Lang::get('master.navbar-results') }}</a></li> -->
           </ul>
         </div><!--/.nav-collapse -->
       </div>
